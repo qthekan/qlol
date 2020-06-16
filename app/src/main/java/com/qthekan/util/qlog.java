@@ -9,10 +9,13 @@ import java.util.Date;
 
 public class qlog
 {
+    public static String mAppName = "qlol";
+    public static String mLogFileName = mAppName + ".txt";
+
+
     public static void e(String log)
     {
         Log.e( getClassName(), getLogMsg(log) );
-        //qutil.writeFile("qHere-" + Thread.currentThread().getName() + ".txt", getLogMsg(log));
     }
 
 
@@ -23,8 +26,7 @@ public class qlog
         e.printStackTrace(pw);
 
         Log.e( getClassName(), getLogMsg(log), e );
-        //qutil.writeFile("qHere-" + Thread.currentThread().getName() + ".txt", getLogMsg(log) + "\n" + sw.toString() );
-        qUtil.writeFile("qHere.txt", getLogMsg(log) + "\n" + sw.toString() );
+        qUtil.writeFile(mLogFileName, getLogMsg(log) + "\n" + sw.toString() );
     }
 
 
@@ -60,8 +62,9 @@ public class qlog
 
         String strMethod = stack.getMethodName() + "()";
         String strLine = String.valueOf(stack.getLineNumber());
+        String strThread = Thread.currentThread().getName();
 
-        String strContents = String.format("%s %s %s: %s", getCurrTime(), strMethod, strLine, log);
+        String strContents = String.format("%s %s %s [%s]: %s", getCurrTime(), strMethod, strLine, strThread, log);
         return strContents;
     }
 

@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="region">
+        <item>kr</item>
+        <item>euw1</item>
+        <item>na1</item>
+    </string-array>
+
     <string-array name="tier">
         <item>CHALLENGER</item>
         <item>GRANDMASTER</item>

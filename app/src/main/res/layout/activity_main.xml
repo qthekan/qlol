@@ -13,9 +13,16 @@
         android:orientation="vertical">
 
         <Spinner
+            android:id="@+id/spiRegion"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#fffa71"
+            android:entries="@array/region" />
+
+        <Spinner
             android:id="@+id/spiTier"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="40dp"
             android:background="#a5f5a5"
             android:entries="@array/tier" />
 

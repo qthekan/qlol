@@ -1,33 +1,34 @@
 package com.qthekan.qlol.rank;
 
 import com.google.gson.Gson;
-import com.qthekan.qlol.MainActivity;
 import com.qthekan.qlol.summoner.SummonerManager;
-import com.qthekan.util.qlog;
 import com.qthekan.util.qUtil;
-
-import java.util.ArrayList;
-
-import static java.lang.Thread.sleep;
+import com.qthekan.util.qlog;
 
 
-public class RankManager
+public class RankManager extends Thread
 {
-    /**
-     * 고승률 유저 정보만 저장
-     */
-    public static ArrayList<RankModel> mRankerList = new ArrayList<>();
+    String mRegion = "";
+    String mTier;
+    int mWinRate;
 
 
-    public static String getRankers(String tier, int winRate)
+    public RankManager(String region, String tier, int winRate)
     {
-        mRankerList.clear();
+        mRegion = region;
+        mTier = tier;
+        mWinRate = winRate;
+    }
+
+
+    @Override
+    public void run()
+    {
         String [] divisions = {"I", "II", "III", "IV"};
 
-        String ret = "";
         for(String division : divisions )
         {
-            if("CHALLENGER".equalsIgnoreCase(tier) || "GRANDMASTER".equalsIgnoreCase(tier) || "MASTER".equalsIgnoreCase(tier))
+            if("CHALLENGER".equalsIgnoreCase(mTier) || "GRANDMASTER".equalsIgnoreCase(mTier) || "MASTER".equalsIgnoreCase(mTier))
             {
                 if("II".equalsIgnoreCase(division) || "III".equalsIgnoreCase(division) || "IV".equalsIgnoreCase(division))
                 {
@@ -35,42 +36,34 @@ public class RankManager
                 }
             }
 
-            String tmp = getRankers(tier, division, winRate);
-            if(tmp == null)
-            {
-                continue;
-            }
-            ret += "\n\n" +tier+"-"+division+ "\n" + tmp;
+            getRankers(mRegion, mTier, division, mWinRate);
         }
-        return ret;
     }
 
 
-    private static String getRankers(String tier, String division, int winRate)
+    private void getRankers(String region, String tier, String division, int winRate)
     {
         //String url = "https://kr.api.riotgames.com/lol/league-exp/v4/entries/RANKED_SOLO_5x5/CHALLENGER/I?page=1";
-        String url = "https://kr.api.riotgames.com/lol/league-exp/v4/entries/RANKED_SOLO_5x5/" + tier + "/" + division;
-        String response = qUtil.sendHttpsGetRequestAsync(url);
+        String url = "https://"+region+".api.riotgames.com/lol/league-exp/v4/entries/RANKED_SOLO_5x5/" + tier + "/" + division;
+        qlog.e("url: " + url);
+        //String response = qUtil.sendHttpsGetRequestAsync(url);
+        String response = qUtil.sendHttpsGetRequest(url);
 
         try {
             Gson gson = new Gson();
             RankModel[] array = gson.fromJson(response, RankModel[].class);
+            SummonerManager summoner = new SummonerManager();
 
-            String ret = "";
             for(RankModel user : array)
             {
                 if(user.getWinRate() > winRate)
                 {
-                    ret = ret + user.getSummonerName() + "=" + user.getWinRate() + "\n";
-                    mRankerList.add(user);
-                    SummonerManager.getSummonerInfo(user.getSummonerName(), user.getWinRate());
+                    summoner.getSummonerInfo(region, user.getSummonerName(), user.getWinRate());
                 }
             }
-            return ret;
         }
         catch (Exception e) {
             qlog.e("nok : " + tier + "-" + division + " " + winRate, e);
-            return null;
         }
     }
 

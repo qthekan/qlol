@@ -64,8 +64,8 @@ public class qUtil
 
 
     /**
-     * @param timestamp : java timestamp (milli sec)
-     * @return yyyy-MM-dd HH:mm:ss
+     * @param timestamp : java timestamp (milli s
+     * @return
      */
     public static String timestampToDtime(long timestamp)
     {
@@ -175,7 +175,7 @@ public class qUtil
     {
         if( !isExternalStorageWritable() )
         {
-            //qlog.e("external storage not writable!!");
+            qlog.e("external storage not writable!!");
             return;
         }
 
@@ -194,7 +194,7 @@ public class qUtil
 
     private static File getSaveDir()
     {
-        File f = new File( Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "qHere");
+        File f = new File( Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), qlog.mAppName);
         if( !f.mkdirs() )
         {
             qlog.e("mkdirs() fail: " + f.getAbsolutePath() );
@@ -242,23 +242,23 @@ public class qUtil
             qlog.e("", e);
         }
     }
-    
-    
+
+
     public static String sendHttpsGetRequest(String urlString)
     {
         try {
             URL url = new URL(urlString);
             HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-            
+
             con.setConnectTimeout(5000);
             con.setReadTimeout(5000);
             con.setRequestMethod("GET");
             con.setRequestProperty("X-Riot-Token", "RGAPI-eb302075-5e42-4897-b302-f35c859724e4");
-            
+
             // response 처리
             int responseCode = con.getResponseCode();
             qlog.i("responseCode=" + responseCode);
-            
+
             BufferedReader in;
             if(responseCode == 200)
             {
@@ -268,7 +268,7 @@ public class qUtil
             {
                 in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
             }
-            
+
             String inputLine;
             StringBuilder contents = new StringBuilder();
             while((inputLine = in.readLine()) != null)
@@ -276,10 +276,10 @@ public class qUtil
                 contents.append(inputLine);
             }
             in.close();
-            
-            //qlog.i(qGson.prettyPrint(contents.toString()));
+
+            qUtil.writeFile(qlog.mAppName+".txt", contents.toString());
             return qGson.prettyPrint(contents.toString());
-        } 
+        }
         catch (Exception e) {
             qlog.e("", e);
             return "";
