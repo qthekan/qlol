@@ -76,6 +76,15 @@ public class qUtil
     }
 
 
+    public static String timestampToMMdd(long timestamp)
+    {
+        Date date = new Date(timestamp);
+
+        SimpleDateFormat format = new SimpleDateFormat("MM-dd");
+        return format.format(date);
+    }
+
+
     /**
      * double 데이터에서 원하는 소수점 자리수만큼만 반환한다.
      */

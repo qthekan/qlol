@@ -5,6 +5,7 @@ import android.text.util.Linkify;
 
 import com.google.gson.Gson;
 import com.qthekan.qlol.MainActivity;
+import com.qthekan.qlol.R;
 import com.qthekan.util.qlog;
 import com.qthekan.util.qUtil;
 
@@ -25,7 +26,7 @@ public class SummonerManager
     public void getSummonerInfo(String region, final String summonerName, int winRate)
     {
         String url = "https://"+region+".api.riotgames.com/lol/summoner/v4/summoners/by-name/" + summonerName;
-        String response = qUtil.sendHttpsGetRequestAsync(url);
+        String response = qUtil.sendHttpsGetRequest(url);
         
         SummonerModel summoner = new SummonerModel();
         Gson gson = new Gson();
@@ -81,7 +82,7 @@ public class SummonerManager
     private void summonerMatchList(String region, String accountId, int winRate)
     {
         String url = "https://"+region+".api.riotgames.com/lol/match/v4/matchlists/by-account/" + accountId;
-        String response = qUtil.sendHttpsGetRequestAsync(url);
+        String response = qUtil.sendHttpsGetRequest(url);
 
         Gson gson = new Gson();
         MatchListModel matchList = gson.fromJson(response, MatchListModel.class);
@@ -100,7 +101,8 @@ public class SummonerManager
                 break;
             }
 
-            String matchInfo = "season:"+m.season + ", champion:"+m.champion + ", lane:"+m.lane + ", dtime:" + qUtil.timestampToDtime(m.timestamp) + "\n";
+            //String matchInfo = "season:"+m.season + ", champion:"+m.getChamp() + ", lane:"+m.lane + ", dtime:" + qUtil.timestampToDtime(m.timestamp) + "\n";
+            String matchInfo = qUtil.timestampToMMdd(m.timestamp) + "  " + m.getLine() + "" + m.getChampName() + "\n";
             MainActivity.mIns.printTextView(matchInfo);
         }
     }

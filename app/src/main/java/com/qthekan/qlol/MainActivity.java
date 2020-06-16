@@ -12,6 +12,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,9 +20,18 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.qthekan.qlol.rank.RankManager;
 import com.qthekan.util.qUtil;
 import com.qthekan.util.qlog;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -50,7 +60,6 @@ public class MainActivity extends AppCompatActivity
                 mTvSearch.append(log);
             }
         });
-
     }
 
 
@@ -87,6 +96,40 @@ public class MainActivity extends AppCompatActivity
         mAsset = getAssets();
 
         checkPermission();
+
+        getChampInfo();
+    }
+
+
+    public HashMap<Integer, String> mChampionInfo = new HashMap<>();
+    private void getChampInfo()
+    {
+        try {
+            mChampionInfo.clear();
+            AssetManager am = getAssets();
+
+            InputStream is = am.open("champion.json");
+            Reader reader = new InputStreamReader(is);
+
+            JsonParser parser = new JsonParser();
+            JsonObject object = (JsonObject) parser.parse(reader);
+
+            JsonObject data = (JsonObject) object.get("data");
+            for(String tmp : data.keySet())
+            {
+                //qlog.e("tmp: " + tmp);
+                JsonObject champion = (JsonObject) data.get(tmp);
+
+                int key = champion.get("key").getAsInt();
+                String name = champion.get("name").getAsString();
+                qlog.e("key: " + key + ", name: " + name);
+
+                mChampionInfo.put(key, name);
+            }
+        } catch (Exception e) {
+            qlog.e("", e);
+        }
+
     }
 
 

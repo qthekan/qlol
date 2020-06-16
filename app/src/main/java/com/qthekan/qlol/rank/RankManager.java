@@ -46,7 +46,6 @@ public class RankManager extends Thread
         //String url = "https://kr.api.riotgames.com/lol/league-exp/v4/entries/RANKED_SOLO_5x5/CHALLENGER/I?page=1";
         String url = "https://"+region+".api.riotgames.com/lol/league-exp/v4/entries/RANKED_SOLO_5x5/" + tier + "/" + division;
         qlog.e("url: " + url);
-        //String response = qUtil.sendHttpsGetRequestAsync(url);
         String response = qUtil.sendHttpsGetRequest(url);
 
         try {

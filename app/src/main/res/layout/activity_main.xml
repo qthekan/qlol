@@ -78,6 +78,7 @@
             android:layout_height="match_parent"
             android:textSize="20dp"
             android:textIsSelectable="true"
+            android:fontFamily="monospace"
             android:scrollbars="vertical"
             android:scrollbarSize="10dp"
             android:text="" />
