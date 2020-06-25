@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity
     //=========================================================================
     public void onSearch(View v)
     {
-        mTvSearch.setText("");
+        mTvSearch.setText("Search...\n");
         mLastIndex = 0;
 
         String region = mSpiRegion.getSelectedItem().toString();

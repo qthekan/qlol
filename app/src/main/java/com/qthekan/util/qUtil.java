@@ -201,6 +201,27 @@ public class qUtil
     }
 
 
+    static public void writeFileAppend(String fileName, String data)
+    {
+        if( !isExternalStorageWritable() )
+        {
+            qlog.e("external storage not writable!!");
+            return;
+        }
+
+        File f = new File( getSaveDir(), fileName);
+        try {
+            FileWriter w = new FileWriter(f, true);
+            w.write(data);
+            w.flush();
+            w.close();
+        }
+        catch (IOException e) {
+            //Log.e("", e.getMessage() );
+        }
+    }
+
+
     private static File getSaveDir()
     {
         File f = new File( Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), qlog.mAppName);
@@ -216,40 +237,6 @@ public class qUtil
     private static boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state);
-    }
-
-
-    public static void writeFile(String path, String name, String contents)
-    {
-        File file = new File(path + name);
-        
-        try 
-        {
-            FileWriter writer = new FileWriter(file);
-            writer.write(contents);
-            writer.close();
-        } 
-        catch (Exception e)
-        {
-            qlog.e("", e);
-        }
-    }
-    
-    
-    public static void writeFileAppend(String path, String name, String contents)
-    {
-        File file = new File(path + name);
-        
-        try 
-        {
-            FileWriter writer = new FileWriter(file, true);
-            writer.write(contents);
-            writer.close();
-        } 
-        catch (Exception e)
-        {
-            qlog.e("", e);
-        }
     }
 
 
@@ -273,6 +260,11 @@ public class qUtil
             {
                 in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             }
+            else if(responseCode == 429)
+            {
+                Thread.sleep(10 * 1000);
+                return sendHttpsGetRequest(urlString);
+            }
             else
             {
                 in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
@@ -286,8 +278,9 @@ public class qUtil
             }
             in.close();
 
-            qUtil.writeFile(qlog.mAppName+".txt", contents.toString());
-            return qGson.prettyPrint(contents.toString());
+            String ret = qGson.prettyPrint(contents.toString());
+            qUtil.writeFileAppend(qlog.mLogFileName, "==========\n"+ret+"\n\n");
+            return ret;
         }
         catch (Exception e) {
             qlog.e("", e);

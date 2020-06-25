@@ -12,6 +12,18 @@
         android:focusableInTouchMode="true"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/tvSearch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="20dp"
+            android:textIsSelectable="true"
+            android:fontFamily="monospace"
+            android:scrollbars="vertical"
+            android:scrollbarSize="10dp"
+            android:layout_weight="1"
+            android:text="" />
+
         <Spinner
             android:id="@+id/spiRegion"
             android:layout_width="match_parent"
@@ -72,16 +84,6 @@
                 android:text="Prev" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tvSearch"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="20dp"
-            android:textIsSelectable="true"
-            android:fontFamily="monospace"
-            android:scrollbars="vertical"
-            android:scrollbarSize="10dp"
-            android:text="" />
     </LinearLayout>
 
 </RelativeLayout>
