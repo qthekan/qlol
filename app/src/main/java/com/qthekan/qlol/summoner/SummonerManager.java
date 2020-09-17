@@ -81,7 +81,7 @@ public class SummonerManager
     //String mMatchInfo;
     private void summonerMatchList(String region, String accountId, int winRate)
     {
-        String url = "https://"+region+".api.riotgames.com/lol/match/v4/matchlists/by-account/" + accountId;
+        String url = "https://"+region+".api.riotgames.com/lol/match/v4/matchlists/by-account/" + accountId + "?queue=420";
         String response = qUtil.sendHttpsGetRequest(url);
 
         Gson gson = new Gson();

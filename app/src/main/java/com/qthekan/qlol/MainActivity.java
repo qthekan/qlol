@@ -103,7 +103,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onLongClick(View view) {
                 String totalString = mTvSearch.getText().toString();
-                mTvSearch.bringPointIntoView(totalString.length());
+                mLastIndex = totalString.length();
+                mTvSearch.bringPointIntoView(mLastIndex);
 
                 return true;
             }
@@ -112,7 +113,8 @@ public class MainActivity extends AppCompatActivity
         mBtnPrev.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                mTvSearch.bringPointIntoView(0);
+                mLastIndex = 0;
+                mTvSearch.bringPointIntoView(mLastIndex);
                 return true;
             }
         });
@@ -161,7 +163,7 @@ public class MainActivity extends AppCompatActivity
 
         String region = mSpiRegion.getSelectedItem().toString();
         String tier = mSpiTier.getSelectedItem().toString();
-        int winRate = qUtil.parseInt(mEtWinRate.getText().toString().replace(" ", ""), 70);
+        int winRate = qUtil.parseInt(mEtWinRate.getText().toString().replace(" ", ""), 90);
 
         RankManager rank = new RankManager(region, tier, winRate);
         rank.start();
@@ -211,7 +213,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         qlog.e("mLastIndex3: " + mLastIndex);
-        mTvSearch.bringPointIntoView(mLastIndex);
+        //mTvSearch.bringPointIntoView(mLastIndex);
         int index = totalString.substring(0, mLastIndex).lastIndexOf(mSEARCH_KEY_WORD);
         mLastIndex = index;
         qlog.e("mLastIndex4: " + mLastIndex);
@@ -219,7 +221,7 @@ public class MainActivity extends AppCompatActivity
         {
             mLastIndex = 0;
         }
-        mTvSearch.bringPointIntoView(mLastIndex + 1);
+        mTvSearch.bringPointIntoView(mLastIndex + 3);
     }
 
 

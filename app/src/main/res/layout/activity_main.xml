@@ -42,8 +42,8 @@
             android:id="@+id/etWinRate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="win rate 90 %"
             android:selectAllOnFocus="true"
-            android:hint="win rate (default: 70 %)"
             android:text="" />
 
         <LinearLayout
