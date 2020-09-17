@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity
     private Button mBtnPrev;
     public static TextView mTvSearch;
     private EditText mEtWinRate;
+    private EditText mEtMonth;
     private Spinner mSpiTier;
     private Spinner mSpiRegion;
 
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity
         mBtnPrev = findViewById(R.id.btnPrev);
         mTvSearch = findViewById(R.id.tvSearch);
         mEtWinRate = findViewById(R.id.etWinRate);
+        mEtMonth = findViewById(R.id.etMonth);
         mSpiTier = findViewById(R.id.spiTier);
         mSpiRegion = findViewById(R.id.spiRegion);
 
@@ -206,6 +208,21 @@ public class MainActivity extends AppCompatActivity
         {
             mTvSearch.bringPointIntoView(mLastIndex + 200);
         }
+
+        String strMonth = mEtMonth.getText().toString();
+        if(strMonth.length() > 0)
+        {
+            searchMonthNext(strMonth);
+        }
+    }
+
+
+    void searchMonthNext(String month)
+    {
+        String totalString = mTvSearch.getText().toString();
+        int index = totalString.substring(mLastIndex++).indexOf(month + "-");
+        mLastIndex += index;
+        mTvSearch.bringPointIntoView(mLastIndex);
     }
 
 
@@ -221,13 +238,28 @@ public class MainActivity extends AppCompatActivity
         qlog.e("mLastIndex3: " + mLastIndex);
         //mTvSearch.bringPointIntoView(mLastIndex);
         int index = totalString.substring(0, mLastIndex).lastIndexOf(mSEARCH_KEY_WORD);
-        mLastIndex = index;
+        mLastIndex = index + 3;
         qlog.e("mLastIndex4: " + mLastIndex);
         if(mLastIndex < 0)
         {
             mLastIndex = 0;
         }
-        mTvSearch.bringPointIntoView(mLastIndex + 3);
+        mTvSearch.bringPointIntoView(mLastIndex);
+
+        String strMonth = mEtMonth.getText().toString();
+        if(strMonth.length() > 0)
+        {
+            searchMonthPrev(strMonth);
+        }
+    }
+
+
+    void searchMonthPrev(String month)
+    {
+        String totalString = mTvSearch.getText().toString();
+        int index = totalString.substring(0, mLastIndex).lastIndexOf(month + "-");
+        mLastIndex = index + 3;
+        mTvSearch.bringPointIntoView(mLastIndex);
     }
 
 
