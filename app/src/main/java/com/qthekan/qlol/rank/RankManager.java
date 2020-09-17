@@ -61,26 +61,32 @@ public class RankManager extends Thread
     private void getRankers(String region, String tier, String division, int winRate)
     {
         MainActivity.mIns.printTextView("\ntier : " + tier + " " + division + "\n");
-        //String url = "https://kr.api.riotgames.com/lol/league-exp/v4/entries/RANKED_SOLO_5x5/CHALLENGER/I?page=1";
-        String url = "https://"+region+".api.riotgames.com/lol/league-exp/v4/entries/RANKED_SOLO_5x5/" + tier + "/" + division;
-        qlog.e("url: " + url);
-        String response = qUtil.sendHttpsGetRequest(url);
 
-        try {
-            Gson gson = new Gson();
-            RankModel[] array = gson.fromJson(response, RankModel[].class);
-            SummonerManager summoner = new SummonerManager();
+        for(int i = 1 ; i < 600 ; i++) {
+            //String url = "https://kr.api.riotgames.com/lol/league-exp/v4/entries/RANKED_SOLO_5x5/CHALLENGER/I?page=1";
+            String url = "https://" + region + ".api.riotgames.com/lol/league-exp/v4/entries/RANKED_SOLO_5x5/" + tier + "/" + division + "?page=" + i;
+            qlog.e("url: " + url);
+            String response = qUtil.sendHttpsGetRequest(url);
 
-            for(RankModel user : array)
-            {
-                if(user.getWinRate() > winRate)
+            try {
+                Gson gson = new Gson();
+                RankModel[] array = gson.fromJson(response, RankModel[].class);
+                SummonerManager summoner = new SummonerManager();
+
+                if(array.length == 0)
                 {
-                    summoner.getSummonerInfo(region, user.getSummonerName(), user.getWinRate());
+                    break;
                 }
+
+                for (RankModel user : array) {
+                    if (user.getWinRate() > winRate) {
+                        summoner.getSummonerInfo(region, user.getSummonerName(), user.getWinRate());
+                    }
+                }
+            } catch (Exception e) {
+                qlog.e("nok : " + tier + "-" + division + " " + winRate + ", page=" + i, e);
+                break;
             }
-        }
-        catch (Exception e) {
-            qlog.e("nok : " + tier + "-" + division + " " + winRate, e);
         }
     }
 

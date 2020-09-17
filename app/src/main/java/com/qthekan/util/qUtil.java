@@ -262,7 +262,7 @@ public class qUtil
             }
             else if(responseCode == 429)
             {
-                Thread.sleep(10 * 1000);
+                Thread.sleep(30 * 1000);
                 return sendHttpsGetRequest(urlString);
             }
             else

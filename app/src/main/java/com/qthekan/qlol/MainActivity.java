@@ -98,6 +98,24 @@ public class MainActivity extends AppCompatActivity
         checkPermission();
 
         getChampInfo();
+
+        mBtnNext.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                String totalString = mTvSearch.getText().toString();
+                mTvSearch.bringPointIntoView(totalString.length());
+
+                return true;
+            }
+        });
+
+        mBtnPrev.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                mTvSearch.bringPointIntoView(0);
+                return true;
+            }
+        });
     }
 
 
