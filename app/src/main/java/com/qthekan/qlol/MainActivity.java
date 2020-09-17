@@ -2,17 +2,12 @@ package com.qthekan.qlol;
 
 import android.Manifest;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,17 +15,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.qthekan.qlol.rank.RankManager;
 import com.qthekan.util.qUtil;
 import com.qthekan.util.qlog;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity
@@ -124,15 +114,31 @@ public class MainActivity extends AppCompatActivity
     public HashMap<Integer, String> mChampionInfo = new HashMap<>();
     private void getChampInfo()
     {
+        String url = "https://ddragon.leagueoflegends.com/api/versions.json";
+        String res = qUtil.sendHttpsGetRequestAsync(url);
+        /// ["10.19.1", "10.18.1", ...]
+        //qlog.e(res);
+
+        String res2 = res.replace("[", "");
+        String res3 = res2.replace("\"", "");
+        String version = res3.split(",")[0].replace("\n", "").replace(" ", "");
+        qlog.e(version);
+
+        String url2 = "https://ddragon.leagueoflegends.com/cdn/" + version + "/data/en_US/champion.json";
+        qlog.e(url2);
+        String championsJsonString = qUtil.sendHttpsGetRequestAsync(url2);
+        qlog.e(championsJsonString);
+
         try {
             mChampionInfo.clear();
-            AssetManager am = getAssets();
-
-            InputStream is = am.open("champion.json");
-            Reader reader = new InputStreamReader(is);
-
+//            AssetManager am = getAssets();
+//
+//            InputStream is = am.open("champion.json");
+//            Reader reader = new InputStreamReader(is);
+//
             JsonParser parser = new JsonParser();
-            JsonObject object = (JsonObject) parser.parse(reader);
+//            JsonObject object = (JsonObject) parser.parse(reader);
+            JsonObject object = (JsonObject) parser.parse(championsJsonString);
 
             JsonObject data = (JsonObject) object.get("data");
             for(String tmp : data.keySet())
